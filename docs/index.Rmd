@@ -1,0 +1,419 @@
+---
+title: "Conferência dos dados"
+author: "Fabio José Andres Schneider"
+date: "`r format(Sys.Date(), format='%d de %B de %Y')`"
+encoding: "UTF-8"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    chakra: libs/remark-latest.min.js
+    css: [xaringan-themer.css, custom.css]
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(fig.align = "center",
+                      message = FALSE,
+                      warning = FALSE,
+                      echo = FALSE
+                      )
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_accent(
+  base_color = "#23395b",
+  header_font_google = google_font("Josefin Sans"),
+  text_font_google   = google_font("Montserrat", "300", "300i"),
+  code_font_google   = google_font("Fira Mono")
+)
+
+```
+
+
+```{r xaringanExtra, echo=FALSE}
+#devtools::install_github("gadenbuie/xaringanExtra")
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons"))
+xaringanExtra::use_editable(expires = 1)
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         #<<
+  mute_unhighlighted_code = TRUE  #<<
+)
+
+```
+
+
+```{r, echo=FALSE}
+
+library(tidyverse)
+library(EnvStats)
+library(egg)
+library(plotly)
+library(ggpubr)
+library(ggforce)
+library(gtsummary)
+
+### Rio
+
+Summary_df_rio <- read.csv("df_summary/Summary_df_rio.csv")
+
+
+## Parcelas
+
+Summary_df_parcelas <- read.csv("df_summary/Summary_df_parcelas.csv")
+
+```
+
+
+
+
+# Conferência e análise dos dados
+
+
+- #### Objetivo: estimular a troca de informação e contribuir para a construção de um banco de dados robusto e consistente;
+
+--
+
+- #### Podem haver alguns equívocos para a interpretação dos dados, pois não temos o mesmo conhecimento dos pesquisadores que atuam diretamente em cada área;
+
+--
+
+- #### Os dados são fundamentais para a interpretação dos processos hidrológicos e futura modelagem matemática;
+
+
+---
+## Dados analisados (Bacia)
+
+- Variação das chuvas monitoradas nas bacias hidrográficas:
+
+<br>
+
+```{r, echo=FALSE, out.width="100%", out.height="60%"}
+plot_ly(data = Summary_df_rio) %>%
+  add_boxplot(~Local, ~P, text = ~paste('Data: ', Evento)) %>%
+  layout(yaxis = list(title = 'Precipitação (mm)', showline = T)) %>%
+  layout(title = "Precipitações nas bacias hidrográficas")
+
+```
+
+
+
+
+---
+## Dados analisados (Bacia)
+
+- Variação do coeficiente de escoamento nas bacias hidrográficas;
+
+<br>
+
+```{r, echo=FALSE, out.width="100%", out.height="60%"}
+plot_ly(data = Summary_df_rio) %>%
+  add_boxplot(~Local, ~C, text = ~paste('Data: ', Evento)) %>%
+  layout(yaxis = list(title = 'Coeficiente de escoamento (%)', showline = T)) %>%
+  layout(title = "Coeficiente de escoamento das bacias hidrográficas")
+
+```
+
+
+
+
+---
+## Dados analisados (Bacia)
+
+- Variação da lâmina escoada nas bacias hidrográficas;
+
+<br>
+
+```{r, echo=FALSE, out.width="100%", out.height="60%"}
+plot_ly(data = Summary_df_rio) %>%
+  add_boxplot(~Local, ~Lamina, text = ~paste('Data: ', Evento)) %>%
+  layout(yaxis = list(title = 'Lâmina (mm)', showline = T)) %>%
+  layout(title = "Lâmina perdida nas bacias hidrográficas")
+
+```
+
+
+---
+## Dados analisados (Bacia)
+
+- Variação da vazão máxima nas bacias hidrográficas;
+
+<br>
+
+```{r, echo=FALSE, out.width="100%", out.height="60%"}
+plot_ly(data = Summary_df_rio) %>%
+  add_boxplot(~Local, ~qmax, text = ~paste('Data: ', Evento)) %>%
+  layout(yaxis = list(title = 'Vazão máxima (L/s)', showline = T)) %>%
+  layout(title = "Vazão máxima nas bacias hidrográficas")
+
+```
+---
+## Dados analisados (Bacia)
+
+- Variação da concentração de sedimentos em suspensão nas bacias hidrográficas;
+
+<br>
+
+```{r, echo=FALSE, out.width="100%", out.height="60%"}
+plot_ly(data = Summary_df_rio) %>%
+  add_boxplot(~Local, ~CSSmax, text = ~paste('Data: ', Evento)) %>%
+  layout(yaxis = list(title = 'CSS (g/L)', showline = T)) %>%
+  layout(title = "Concentração máxima de sedimentos em suspensão nas bacias hidrográficas")
+
+```
+
+---
+## Dados analisados (Bacia)
+
+- Variação da produção de sedimentos nas bacias hidrográficas;
+
+<br>
+
+```{r, echo=FALSE, out.width="100%", out.height="60%"}
+plot_ly(data = Summary_df_rio) %>%
+  add_boxplot(~Local, ~PS, text = ~paste('Data: ', Evento)) %>%
+  layout(yaxis = list(title = 'PS (kg)', showline = T)) %>%
+  layout(title = "Produção de sedimentos nas bacias hidrográficas")
+
+```
+
+---
+## Dados analisados (Bacia)
+
+
+
+```{r, echo=FALSE, out.width="100%", out.height="70%"}
+plot_ly(data = Summary_df_rio) %>%
+  add_boxplot(~Local, ~Tlpc, text = ~paste('Data: ', Evento, '- I30:', I30max)) %>%
+  layout(yaxis = list(title = 'Tlpc (min)', showline = T)) %>%
+  layout(title = "Tempo entre o centróide da chuva e o pico da vazão")
+
+```
+
+---
+## Dados analisados (Parcelas)
+
+- Variação das chuvas monitoradas nas parcelas com e sem terraço:
+
+<br>
+
+```{r, echo=FALSE, out.width="100%", out.height="60%"}
+plot_ly(data = Summary_df_parcelas) %>%
+  add_boxplot(~Local, ~P, text = ~paste('Data: ', Evento)) %>%
+  layout(yaxis = list(title = 'Precipitação (mm)', showline = T)) %>%
+  layout(title = "Precipitações nas parcelas")
+
+```
+
+
+---
+## Dados analisados (Parcelas)
+
+- Variação do coeficiente de escoamento nas parcelas com e sem terraço:
+
+<br>
+
+```{r, echo=FALSE, out.width="100%", out.height="60%"}
+plot_ly(data = Summary_df_parcelas) %>%
+  add_boxplot(~Local, ~C, color = ~parcela, text = ~paste('Data: ', Evento)) %>%
+  layout(boxmode = "group") %>%
+  layout(yaxis = list(title = 'Coeficiente de escoamento (%)', showline = T)) %>%
+  layout(title = "Coeficiente de escoamento das parcelas")
+
+```
+
+
+
+
+---
+## Dados analisados (Parcelas)
+
+- Variação da lâmina escoada nas parcelas com e sem terraço:
+
+<br>
+
+```{r, echo=FALSE, out.width="100%", out.height="60%"}
+plot_ly(data = Summary_df_parcelas) %>%
+  add_boxplot(~Local, ~Lamina, color = ~parcela, text = ~paste('Data: ', Evento)) %>%
+  layout(boxmode = "group") %>%
+  layout(yaxis = list(title = 'Lâmina (mm)', showline = T)) %>%
+  layout(title = "Lâmina perdida nas parcelas")
+
+```
+
+
+---
+## Dados analisados  (Parcelas)
+
+- Variação da vazão máxima nas parcelas com e sem terraço:
+
+<br>
+
+```{r, echo=FALSE, out.width="100%", out.height="60%"}
+plot_ly(data = Summary_df_parcelas) %>%
+  add_boxplot(~Local, ~qmax, color = ~parcela, text = ~paste('Data: ', Evento)) %>%
+  layout(boxmode = "group") %>%
+  layout(yaxis = list(title = 'Vazão máxima (L/s)', showline = T)) %>%
+  layout(title = "Vazão máxima nas Parcelas")
+
+```
+
+---
+## Dados analisados (Parcelas)
+
+- Variação da concentração de sedimentos em suspensão nas parcelas com e sem terraço:
+
+<br>
+
+```{r, echo=FALSE, out.width="100%", out.height="60%"}
+plot_ly(data = Summary_df_parcelas) %>%
+  add_boxplot(~Local, ~CSSmax, color = ~parcela, text = ~paste('Data: ', Evento)) %>%
+  layout(boxmode = "group") %>%
+  layout(yaxis = list(title = 'CSS (g/L)', showline = T)) %>%
+  layout(title = "Concentração máxima de sedimentos em suspensão nas parcelas")
+
+```
+
+---
+## Dados analisados (Parcelas)
+
+- Variação da produção de sedimentos nas parcelas com e sem terraço:
+
+<br>
+
+```{r, echo=FALSE, out.width="100%", out.height="60%"}
+plot_ly(data = Summary_df_parcelas) %>%
+  add_boxplot(~Local, ~PS, color = ~parcela, text = ~paste('Data: ', Evento)) %>%
+  layout(boxmode = "group") %>%
+  layout(yaxis = list(title = 'Produção de sedimentos (kg)', showline = T)) %>%
+  layout(title = "Produção de sedimentos nas parcelas")
+
+```
+
+---
+## Dados analisados (Parcelas)
+
+
+
+```{r, echo=FALSE, out.width="100%", out.height="70%"}
+plot_ly(data = Summary_df_parcelas) %>%
+  add_boxplot(~Local, ~Tlpc, color = ~parcela, text = ~paste('Data: ', Evento)) %>%
+  layout(boxmode = "group") %>%
+  layout(yaxis = list(title = 'Tlpc (min)', showline = T)) %>%
+  layout(title = "Tempo entre o centróide da chuva e o pico da vazão para cada parcela")
+
+```
+
+---
+### Chuvas monitoradas acima de 80 mm (Bacia)
+
+```{r, echo=FALSE, out.width="100%", out.height="70%"}
+plot_ly(data = Summary_df_rio[Summary_df_rio$P>80,]) %>%
+  add_markers(~Local, ~P, text = ~paste('Data: ', Evento)) %>%
+  layout(yaxis = list(title = 'Precipitação (mm)', showline = T)) %>%
+  layout(title = "Precipitações nas bacias hidrográficas")
+
+```
+
+---
+### Chuvas monitoradas acima de 80 mm (Parcelas)
+
+```{r, echo=FALSE, out.width="100%", out.height="70%"}
+plot_ly(data = Summary_df_parcelas[Summary_df_parcelas$P>80,]) %>%
+  add_markers(~Local, ~P, text = ~paste('Data: ', Evento)) %>%
+  layout(yaxis = list(title = 'Precipitação (mm)', showline = T)) %>%
+  layout(title = "Precipitações nas parcelas com e sem terraço")
+
+```
+
+
+---
+### Quantidade de dados recebidos e analisados
+
+```{r, echo=FALSE, out.width="100%", out.height="80%"}
+df_rio <- read.csv("../Tabelas_resumo/summary_values_rio_COUNT.csv")
+
+subplot(
+  plot_ly(df_rio) %>%
+    add_bars(~Local, ~P) %>%
+    layout(yaxis = list(title = 'P', showline = T)),
+
+  plot_ly(df_rio) %>%
+    add_bars(~Local, ~Q) %>%
+    layout(yaxis = list(title = 'Q', showline = T)),
+
+  plot_ly(df_rio) %>%
+    add_bars(~Local, ~CSS) %>%
+    layout(yaxis = list(title = 'CSS', showline = T)),
+
+ nrows = 3, shareX = T, shareY = T
+) %>% layout(title = "Número de eventos analisados na bacia hidrográfica", showlegend = F)
+
+```
+
+
+
+
+
+---
+### Quantidade de dados recebidos e analisados
+
+```{r, echo=FALSE, out.width="100%", out.height="80%"}
+df_parcelas <- read.csv("../Tabelas_resumo/summary_values_parcelas_CONT_aj.csv")
+
+subplot(
+  plot_ly(df_parcelas) %>%
+    add_bars(~Local, ~P, color = ~Parcela, showlegend = F) %>%
+    layout(yaxis = list(title = 'P', showline = T)),
+
+  plot_ly(df_parcelas) %>%
+    add_bars(~Local, ~Q, color = ~Parcela, showlegend = F) %>%
+    layout(yaxis = list(title = 'Q', showline = T)),
+
+  plot_ly(df_parcelas) %>%
+    add_bars(~Local, ~CSS, color = ~Parcela) %>%
+    layout(yaxis = list(title = 'CSS', showline = T)),
+
+ nrows = 3, shareX = T, shareY = T
+) %>% layout(title = "Número de eventos analisados nas parcelas com e sem terraço", showlegend = T)
+
+```
+
+
+
+
+
+---
+## Considerações
+
+- #### Determinação de um evento pluviométrico;
+  - Planillha de chuvas diárias.
+  - Determinação da chuva efetiva.
+
+--
+
+- #### Determinação de um evento de escoamento superficial;
+  - Separação do escoamento superficial e de base.
+
+--
+
+- #### Estimativa da perda de sedimento;
+  - Coletas manuais;
+  - Amostrador automático;
+  - Turbidímetro.
+
+--
+
+#### **_IMPORTÂNCIA DO MONITORAMENTO PRESENCIAL_**
+ 
+ 
+---
+class: center, middle
+
+# Obrigado!
+
