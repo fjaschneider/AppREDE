@@ -312,7 +312,16 @@ plot_ly(data = Summary_df_parcelas) %>%
 ---
 ### Chuvas monitoradas acima de 80 mm (Bacia)
 
-```{r, echo=FALSE, out.width="100%", out.height="70%"}
+- Tempo de recorência 10 anos:
+  - Ponta Grossa: 107.2 mm
+  - Guarapuava: 105.2 mm
+  - Dois Vizinhos: 120 mm
+  - Presidente Castelo Branco: 142.2 mm
+  - Cianorte: 155.6 mm
+  - Toledo: 120 mm
+  - Cambé: 137.5 mm
+
+```{r, echo=FALSE, out.width="100%", out.height="50%"}
 plot_ly(data = Summary_df_rio[Summary_df_rio$P>80,]) %>%
   add_markers(~Local, ~P, text = ~paste('Data: ', Evento)) %>%
   layout(yaxis = list(title = 'Precipitação (mm)', showline = T)) %>%
@@ -323,7 +332,16 @@ plot_ly(data = Summary_df_rio[Summary_df_rio$P>80,]) %>%
 ---
 ### Chuvas monitoradas acima de 80 mm (Parcelas)
 
-```{r, echo=FALSE, out.width="100%", out.height="70%"}
+- Tempo de recorência 10 anos:
+  - Ponta Grossa: 107.2 mm
+  - Guarapuava: 105.2 mm
+  - Dois Vizinhos: 120 mm
+  - Presidente Castelo Branco: 142.2 mm
+  - Cianorte: 155.6 mm
+  - Toledo: 120 mm
+  - Cambé: 137.5 mm
+
+```{r, echo=FALSE, out.width="100%", out.height="50%"}
 plot_ly(data = Summary_df_parcelas[Summary_df_parcelas$P>80,]) %>%
   add_markers(~Local, ~P, text = ~paste('Data: ', Evento)) %>%
   layout(yaxis = list(title = 'Precipitação (mm)', showline = T)) %>%
