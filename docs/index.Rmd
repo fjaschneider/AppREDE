@@ -354,7 +354,7 @@ plot_ly(data = Summary_df_parcelas[Summary_df_parcelas$P>80,]) %>%
 ### Quantidade de dados recebidos e analisados
 
 ```{r, echo=FALSE, out.width="100%", out.height="80%"}
-df_rio <- read.csv("../Tabelas_resumo/summary_values_rio_COUNT.csv")
+df_rio <- read.csv("df_summary/summary_values_rio_COUNT.csv")
 
 subplot(
   plot_ly(df_rio) %>%
@@ -382,7 +382,7 @@ subplot(
 ### Quantidade de dados recebidos e analisados
 
 ```{r, echo=FALSE, out.width="100%", out.height="80%"}
-df_parcelas <- read.csv("../Tabelas_resumo/summary_values_parcelas_CONT_aj.csv")
+df_parcelas <- read.csv("df_summary/summary_values_parcelas_CONT_aj.csv")
 
 subplot(
   plot_ly(df_parcelas) %>%
